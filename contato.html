@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contato - Techly Store</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-container">
+    <img src="imagens/logo.png" alt="Techly Store Logo">
+    <h1>Techly Store</h1>
+  </div>
+
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="produtos.html">Produtos</a>
+    <a href="ofertas.html">Ofertas</a>
+    <a href="contato.html">Contato</a>
+  </nav>
+</header>
+
+<!-- CONTATO -->
+<section class="contact">
+  <h2>Entre em Contato</h2>
+  <p>Conecte-se conosco pelas redes sociais ou deixe sua avaliação e sugestões.</p>
+
+  <div class="contact-links">
+    <a href="https://wa.me/5511974621278" target="_blank" class="btn">WhatsApp</a>
+    <a href="https://instagram.com/techlystore" target="_blank" class="btn">Instagram</a>
+  </div>
+</section>
+
+<!-- AVALIAÇÃO E SUGESTÕES -->
+<section class="contact-form">
+  <h2>Avaliação e Sugestões</h2>
+  <form action="#" method="post">
+    <div class="rating">
+      <label>Avaliação (1 a 5 estrelas):</label><br>
+      <div class="stars">
+        <input type="radio" id="star5" name="rating" value="5"><label for="star5">⭐</label>
+        <input type="radio" id="star4" name="rating" value="4"><label for="star4">⭐</label>
+        <input type="radio" id="star3" name="rating" value="3"><label for="star3">⭐</label>
+        <input type="radio" id="star2" name="rating" value="2"><label for="star2">⭐</label>
+        <input type="radio" id="star1" name="rating" value="1"><label for="star1">⭐</label>
+      </div>
+    </div>
+    <div class="suggestions">
+      <label for="suggestions">Sugestões:</label><br>
+      <textarea id="suggestions" name="suggestions" placeholder="Deixe sua sugestão aqui..."></textarea>
+    </div>
+    <button type="submit" class="btn">Enviar</button>
+  </form>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

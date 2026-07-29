@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techly Store</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  </head>
+<body>
+
+  <!-- NAV -->
+<header>
+  <div class="logo-container">
+    <img src="imagens/logo.png" alt="Techly Store Logo">
+    <h1>Techly Store</h1>
+  </div>
+
+  <nav>
+    <a href="#">Início</a>
+    <a href="produtos.html">Produtos</a>
+    <a href="ofertas.html">Ofertas</a>
+    <a href="contato.html">Contato</a>
+  </nav>
+
+  <button id="cart-btn" class="cart-btn">Carrinho (0)</button>
+</header>
+
+<!-- CART MODAL -->
+<div id="cart-modal" class="cart-modal">
+  <div class="cart-content">
+    <span class="close">&times;</span>
+    <h2>Carrinho de Compras</h2>
+    <div id="cart-items"></div>
+    <div id="cart-total">Total: R$ 0,00</div>
+    <button id="checkout-btn" class="btn">Finalizar Compra</button>
+  </div>
+</div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h2>Tecnologia de Última Geração</h2>
+    <p>Os melhores eletrônicos com os melhores preços</p>
+   <a href="produtos.html">
+  <button class="btn">Ver Produtos</button>
+</a>
+  </section>
+
+  <!-- PRODUTOS -->
+  <section class="products">
+
+    <div class="card">
+      <img src="imagens/fone.png" alt="Produto">
+      <h3>Fone Bluetooth</h3>
+      <p class="price">R$ 199,90</p>
+      <p class="old-price">R$ 249,90</p>
+      <button class="btn add-to-cart" data-id="1" data-name="Fone Bluetooth" data-price="199.90" data-img="imagens/fone.png">Adicionar ao Carrinho</button>
+    </div>
+
+    <div class="card">
+      <img src="imagens/relogio.png" alt="Produto">
+      <h3>Smartwatch</h3>
+      <p class="price">R$ 349,90</p>
+      <p class="old-price">R$ 399,90</p>
+      <button class="btn add-to-cart" data-id="2" data-name="Smartwatch" data-price="349.90" data-img="imagens/relogio.png">Adicionar ao Carrinho</button>
+    </div>
+
+    <div class="card">
+      <img src="imagens/teclado.png" alt="Produto">
+      <h3>Teclado Gamer</h3>
+      <p class="price">R$ 299,90</p>
+      <p class="old-price">R$ 359,90</p>
+      <button class="btn add-to-cart" data-id="3" data-name="Teclado Gamer" data-price="299.90" data-img="imagens/teclado.png">Adicionar ao Carrinho</button>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-column">
+      <img src="imagens/logo.png" alt="Techly Store" class="logo" width="100px" style="border-radius: 10px;">
+    </div>
+    <div class="footer-column">
+      <h4>Techly Store</h4>
+      <ul>
+        <li>Contato</li>
+        <li>marcas</li>
+        <li>Produtos</li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>O que oferecemos</h4>
+      <ul>
+        <li>Teclados</li>
+        <li>Celulares</li>
+        <li>Manutenção </li>
+        <li>Mouses</li>
+        <li>Teclados</li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Contato e Redes Sociais</h4>
+      <p>techlystore.ofc@gmail.com</p>
+      <p>(11) 97462-1278</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+
+    <div class="copyright">
+      <p>2025 – Techly Store®</p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
