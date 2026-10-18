@@ -13,12 +13,30 @@ function saveCart() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
+function parsePrice(value) {
+    if (typeof value === 'number') return value;
+
+    let cleaned = String(value).trim().replace(/[^\d,.-]/g, '');
+    if (!cleaned) return 0;
+
+    if (cleaned.includes(',') && cleaned.includes('.')) {
+        cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+    } else if (cleaned.includes(',')) {
+        cleaned = cleaned.replace(',', '.');
+    }
+
+    const parsed = parseFloat(cleaned);
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function addToCart(id, name, price, img) {
-    const existing = cart.find(item => item.id === id);
+    const normalizedId = String(id);
+    const normalizedPrice = parsePrice(price);
+    const existing = cart.find(item => String(item.id) === normalizedId);
     if (existing) {
         existing.qty++;
     } else {
-        cart.push({ id, name, price: parseFloat(price), img, qty: 1 });
+        cart.push({ id: normalizedId, name, price: normalizedPrice, img, qty: 1 });
     }
     saveCart();
     updateCartCount();
@@ -26,7 +44,17 @@ function addToCart(id, name, price, img) {
 }
 
 function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
+    const normalizedId = String(id);
+    const itemIndex = cart.findIndex(item => String(item.id) === normalizedId);
+
+    if (itemIndex === -1) return;
+
+    if (cart[itemIndex].qty > 1) {
+        cart[itemIndex].qty -= 1;
+    } else {
+        cart.splice(itemIndex, 1);
+    }
+
     saveCart();
     updateCartCount();
     renderCart();
@@ -46,7 +74,7 @@ function renderCart() {
                 <div>
                     <h4>${item.name}</h4>
                     <p>R$ ${item.price.toFixed(2)} x ${item.qty}</p>
-                    <button onclick="removeFromCart(${item.id})">Remover</button>
+                    <button type="button" class="remove-item" data-id="${item.id}">Remover</button>
                 </div>
             </div>
         `;
@@ -98,37 +126,33 @@ function crc16(payload) {
 }
 
 function buildPixPayload(total, name) {
-    const pixKey = '11974621278';
-    const amount = total > 0 ? total.toFixed(2) : '0.00';
-    const merchantName = 'Techly Store'.slice(0, 25);
+    const pixKey = '5511974621278';
+    const amount = total > 0 ? Number(total).toFixed(2) : '0.00';
+    const merchantName = String(name || 'Techly Store')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9 ]/g, '')
+        .slice(0, 25)
+        .trim() || 'Techly Store';
     const merchantCity = 'Sao Paulo'.slice(0, 15);
+    const txId = 'TECHLY' + String(Date.now()).slice(-6);
 
-    const gui = buildField('00', 'BR.GOV.BCB.PIX');
-    const keyField = buildField('01', pixKey);
-    const merchantAccountInfo = buildField('26', gui + keyField);
-    const merchantCategory = buildField('52', '0000');
-    const currency = buildField('53', '986');
-    const value = buildField('54', amount);
-    const country = buildField('58', 'BR');
-    const merchant = buildField('59', merchantName);
-    const city = buildField('60', merchantCity);
-    const txid = buildField('05', '***');
-    const additional = buildField('62', txid);
+    const keyData =
+        buildField('00', 'BR.GOV.BCB.PIX') +
+        buildField('01', pixKey);
 
     const payloadWithoutCrc =
         buildField('00', '01') +
-        buildField('01', '12') +
-        merchantAccountInfo +
-        merchantCategory +
-        currency +
-        value +
-        country +
-        merchant +
-        city +
-        additional +
-        '6304';
+        buildField('26', keyData) +
+        buildField('52', '0000') +
+        buildField('53', '986') +
+        buildField('54', amount) +
+        buildField('58', 'BR') +
+        buildField('59', merchantName) +
+        buildField('60', merchantCity) +
+        buildField('62', buildField('05', txId));
 
-    return payloadWithoutCrc + crc16(payloadWithoutCrc);
+    return payloadWithoutCrc + '6304' + crc16(payloadWithoutCrc);
 }
 
 function generatePixQRCode(text) {
@@ -141,7 +165,8 @@ function generatePixQRCode(text) {
             width: 250,
             height: 250,
             colorDark: '#000000',
-            colorLight: '#ffffff'
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
         });
     } else {
         pixCode.textContent = text;
@@ -159,9 +184,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const priceText = btn.dataset.price || card?.querySelector('.price')?.innerText || '0';
             const img = btn.dataset.img || card?.querySelector('img')?.getAttribute('src') || '';
             const id = btn.dataset.id || `${name}-${priceText}`;
-            const price = priceText.replace(/[R$\s.]/g, '').replace(',', '.');
+            const price = parsePrice(priceText);
             addToCart(id, name, price, img);
         });
+    });
+    
+
+    document.addEventListener('click', (event) => {
+        const removeButton = event.target.closest('.remove-item');
+        if (removeButton) {
+            removeFromCart(removeButton.dataset.id);
+        }
     });
 
     // Cart modal
@@ -223,8 +256,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
                 const name = document.querySelector('input[name="name"]').value || 'Cliente';
                 const payload = buildPixPayload(total, name);
+                const formattedTotal = Number(total).toFixed(2);
+
                 checkoutForm.style.display = 'none';
-                document.getElementById('pix-total').textContent = `R$ ${total.toFixed(2)}`;
+                document.getElementById('success-message').textContent = `Compra finalizada! Valor do pedido: R$ ${formattedTotal}`;
+                document.getElementById('pix-total').textContent = `R$ ${formattedTotal}`;
                 document.getElementById('pix-section').classList.remove('hidden');
                 generatePixQRCode(payload);
                 cart = [];
