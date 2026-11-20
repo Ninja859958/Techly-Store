@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contato - Techly Store</title>
+  <title>Contato - imports peixes</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,50 +13,74 @@
 <!-- HEADER -->
 <header>
   <div class="logo-container">
-    <img src="imagens/logo.png" alt="Techly Store Logo">
-    <h1>Techly Store</h1>
+    <img src="favicon.ico" alt="Logo imports peixes" class="logo">
+    <h1>imports <span>peixes</span></h1>
   </div>
 
   <nav>
     <a href="index.html">Início</a>
     <a href="produtos.html">Produtos</a>
-    <a href="ofertas.html">Ofertas</a>
     <a href="contato.html">Contato</a>
   </nav>
 </header>
 
 <!-- CONTATO -->
 <section class="contact">
+  <p class="eyebrow">ESTAMOS AQUI PARA AJUDAR</p>
   <h2>Entre em Contato</h2>
   <p>Conecte-se conosco pelas redes sociais ou deixe sua avaliação e sugestões.</p>
 
   <div class="contact-links">
-    <a href="https://wa.me/5511974621278" target="_blank" class="btn">WhatsApp</a>
-    <a href="https://instagram.com/techlystore" target="_blank" class="btn">Instagram</a>
+    <a href="https://wa.me/5511958670509?text=%C3%B3la%2C%20gostaria%20de%20fazer%20um%20pedido!" target="_blank" rel="noopener noreferrer" class="btn">WhatsApp</a>
+    <a href="https://www.instagram.com/importspeixe?utm_source=ig_web_button_share_sheet&amp;cplk=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="btn">Instagram</a>
   </div>
 </section>
 
-<!-- AVALIAÇÃO E SUGESTÕES -->
+<!-- AVALIAÇÃO -->
 <section class="contact-form">
-  <h2>Avaliação e Sugestões</h2>
+  <h2>Avaliação</h2>
   <form action="#" method="post">
     <div class="rating">
-      <label>Avaliação (1 a 5 estrelas):</label><br>
-      <div class="stars">
-        <input type="radio" id="star5" name="rating" value="5"><label for="star5">⭐</label>
-        <input type="radio" id="star4" name="rating" value="4"><label for="star4">⭐</label>
-        <input type="radio" id="star3" name="rating" value="3"><label for="star3">⭐</label>
-        <input type="radio" id="star2" name="rating" value="2"><label for="star2">⭐</label>
-        <input type="radio" id="star1" name="rating" value="1"><label for="star1">⭐</label>
+      <p id="rating-label">Avaliação (1 a 5 estrelas):</p>
+      <div class="stars" role="radiogroup" aria-labelledby="rating-label">
+        <input type="radio" id="star5" name="rating" value="5" aria-label="5 estrelas"><label for="star5">★</label>
+        <input type="radio" id="star4" name="rating" value="4" aria-label="4 estrelas"><label for="star4">★</label>
+        <input type="radio" id="star3" name="rating" value="3" aria-label="3 estrelas"><label for="star3">★</label>
+        <input type="radio" id="star2" name="rating" value="2" aria-label="2 estrelas"><label for="star2">★</label>
+        <input type="radio" id="star1" name="rating" value="1" aria-label="1 estrela" required><label for="star1">★</label>
       </div>
-    </div>
-    <div class="suggestions">
-      <label for="suggestions">Sugestões:</label><br>
-      <textarea id="suggestions" name="suggestions" placeholder="Deixe sua sugestão aqui..."></textarea>
     </div>
     <button type="submit" class="btn">Enviar</button>
   </form>
 </section>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-column">
+      <img class="footer-logo" src="marth.jpg" alt="Logo Imports Peixes">
+      <p>Conjuntos, bonés, moletons e relógios.</p>
+    </div>
+    <div class="footer-column">
+      <h4>O que oferecemos</h4>
+      <ul>
+        <li>Conjuntos</li>
+        <li>Bonés</li>
+        <li>Moletons</li>
+        <li>Relógios</li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Contato e Redes Sociais</h4>
+      <p>techlystore.ofc@gmail.com</p>
+      <p>(11) 97462-1278</p>
+      <p><a href="https://w.app/saxhlx" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
+      <p><a href="https://www.instagram.com/importspeixe?utm_source=ig_web_button_share_sheet&amp;cplk=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">Instagram</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>2026 – imports peixes</p>
+  </div>
+</footer>
 
 <script src="script.js"></script>
 </body>

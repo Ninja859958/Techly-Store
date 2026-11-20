@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finalizar Compra - Techly Store</title>
+  <title>Finalizar Compra - imports peixes</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,14 +13,13 @@
 <!-- HEADER -->
 <header>
   <div class="logo-container">
-    <img src="imagens/logo.png" alt="Techly Store Logo">
-    <h1>Techly Store</h1>
+    <img src="favicon.ico" alt="Logo imports peixes" class="logo">
+    <h1>imports <span>peixes</span></h1>
   </div>
 
   <nav>
     <a href="index.html">Início</a>
     <a href="produtos.html">Produtos</a>
-    <a href="ofertas.html">Ofertas</a>
     <a href="contato.html">Contato</a>
   </nav>
 </header>
@@ -51,8 +51,14 @@
     <p id="success-message">Compra finalizada! Use o QR Code abaixo para pagar via PIX.</p>
     <div class="qr-separator"></div>
     <div id="pix-code" class="pix-code"></div>
-    <p class="pix-info">Chave PIX: <strong>+55 11 97462-1278</strong></p>
+    <p id="pix-error" class="pix-error" role="status"></p>
+    <p class="pix-info">Chave PIX: <strong>+55 11 95867-0509</strong></p>
     <p class="pix-info">Total: <strong id="pix-total"></strong></p>
+    <label class="pix-copy-label" for="pix-copy-code">PIX Copia e Cola</label>
+    <p class="pix-copy-hint">O código é exibido com quebra automática para leitura; ao copiar, ele permanece íntegro.</p>
+    <textarea id="pix-copy-code" class="pix-copy-code" readonly aria-label="Código Pix Copia e Cola"></textarea>
+    <button id="copy-pix-code" type="button" class="btn">Copiar código Pix</button>
+    <p id="pix-copy-status" class="pix-copy-status" role="status" aria-live="polite"></p>
   </div>
 </section>
 

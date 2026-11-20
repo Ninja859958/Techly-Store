@@ -1,5 +1,6 @@
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
+const PIX_KEY = '+5511958670509';
 
 function updateCartCount() {
     const count = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -108,7 +109,7 @@ function pad(value, length) {
 }
 
 function buildField(id, value) {
-    return pad(id, 2) + pad(value.length, 2) + value;
+    return pad(id, 2) + pad(new TextEncoder().encode(value).length, 2) + value;
 }
 
 function crc16(payload) {
@@ -125,24 +126,18 @@ function crc16(payload) {
     return crc.toString(16).toUpperCase().padStart(4, '0');
 }
 
-function buildPixPayload(total, name) {
-    const pixKey = '5511974621278';
+function buildPixPayload(total) {
     const amount = total > 0 ? Number(total).toFixed(2) : '0.00';
-    const merchantName = String(name || 'Techly Store')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-zA-Z0-9 ]/g, '')
-        .slice(0, 25)
-        .trim() || 'Techly Store';
+    const merchantName = 'IMPORTS PEIXES';
     const merchantCity = 'Sao Paulo'.slice(0, 15);
-    const txId = 'TECHLY' + String(Date.now()).slice(-6);
 
     const keyData =
         buildField('00', 'BR.GOV.BCB.PIX') +
-        buildField('01', pixKey);
+        buildField('01', PIX_KEY);
 
-    const payloadWithoutCrc =
+    const payload =
         buildField('00', '01') +
+        buildField('01', '11') +
         buildField('26', keyData) +
         buildField('52', '0000') +
         buildField('53', '986') +
@@ -150,27 +145,34 @@ function buildPixPayload(total, name) {
         buildField('58', 'BR') +
         buildField('59', merchantName) +
         buildField('60', merchantCity) +
-        buildField('62', buildField('05', txId));
+        buildField('62', buildField('05', '***'));
 
-    return payloadWithoutCrc + '6304' + crc16(payloadWithoutCrc);
+    const crcPayload = payload + '6304';
+    return crcPayload + crc16(crcPayload);
 }
 
 function generatePixQRCode(text) {
     const pixCode = document.getElementById('pix-code');
-    if (!pixCode) return;
+    const pixError = document.getElementById('pix-error');
+    if (!pixCode) return false;
     pixCode.innerHTML = '';
-    if (window.QRCode) {
-        new QRCode(pixCode, {
-            text,
-            width: 250,
-            height: 250,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
-        });
-    } else {
-        pixCode.textContent = text;
+    if (!window.QRCode) {
+        if (pixError) {
+            pixError.textContent = 'Não foi possível carregar o gerador do QR Code. Use o Pix Copia e Cola abaixo.';
+        }
+        return false;
     }
+
+    new QRCode(pixCode, {
+        text,
+        width: 250,
+        height: 250,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+    });
+    if (pixError) pixError.textContent = '';
+    return true;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -254,20 +256,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-                const name = document.querySelector('input[name="name"]').value || 'Cliente';
-                const payload = buildPixPayload(total, name);
+                const payload = buildPixPayload(total);
                 const formattedTotal = Number(total).toFixed(2);
 
+                document.getElementById('pix-copy-code').value = payload;
                 checkoutForm.style.display = 'none';
                 document.getElementById('success-message').textContent = `Compra finalizada! Valor do pedido: R$ ${formattedTotal}`;
                 document.getElementById('pix-total').textContent = `R$ ${formattedTotal}`;
                 document.getElementById('pix-section').classList.remove('hidden');
-                generatePixQRCode(payload);
-                cart = [];
-                saveCart();
-                updateCartCount();
+                if (generatePixQRCode(payload)) {
+                    cart = [];
+                    saveCart();
+                    updateCartCount();
+                } else {
+                    checkoutForm.style.display = '';
+                }
             });
         }
+    }
+
+    const copyPixButton = document.getElementById('copy-pix-code');
+    if (copyPixButton) {
+        copyPixButton.addEventListener('click', async () => {
+            const pixCopyCode = document.getElementById('pix-copy-code');
+            const copyStatus = document.getElementById('pix-copy-status');
+            try {
+                await navigator.clipboard.writeText(pixCopyCode.value);
+                copyStatus.textContent = 'Código Pix copiado.';
+            } catch (error) {
+                pixCopyCode.focus();
+                pixCopyCode.select();
+                copyStatus.textContent = 'Não foi possível copiar automaticamente. Selecione e copie o código acima.';
+            }
+        });
     }
 
     // Contact form
@@ -276,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', function(e) {
             if (window.location.pathname.includes('finalizar-compra.html')) return;
             e.preventDefault();
-            alert('Obrigado pela sua avaliação e sugestões!');
+            alert('Obrigado pela sua avaliação!');
             window.location.href = 'index.html';
         });
     }
